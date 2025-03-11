@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Score Predictor</title>
+    <script>
+        function updateBowlingOptions() {
+            let battingTeam = document.getElementById("batting_team").value;
+            let bowlingSelect = document.getElementById("bowling_team");
+            let options = bowlingSelect.getElementsByTagName("option");
+
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = options[i].value === battingTeam;
+            }
+        }
+    </script>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            background: url(https://im.rediff.com/cricket/2020/sep/18shah-bcci.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+
+        }
+        .overlay{
+            position: absolute;
+            width: 100%;
+            height: 105%;
+            background: radial-gradient(rgba(255, 255, 255, 0.218) 5%,rgb(0, 0, 0));
+
+        }
+        .container{
+            background-color: rgba(255, 255, 255, 0.493);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* border: 1px solid black; */
+            padding: 20px 10px;
+            border-radius: 5px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0px 0px 50px 5px black;
+        }
+        .container h2{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container button{
+            position:relative;
+            left: 190px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            background-color: rgba(12, 88, 64, 0.493);
+            color: white;
+            border: none;
+            font-weight: 600;
+        }
+        .container button:hover{
+            background-color: rgba(72, 237, 182, 0.493);
+            cursor: pointer;
+            box-shadow: 0px 0px 25px 5px white;
+        }
+        .container select{
+            background-color: rgba(127, 255, 212, 0.493);
+            border-radius: 20px;
+            padding: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="overlay"></div>
+    <div class="container">
+        
+        <h2>IPL Score Prediction</h2>
+        <form action="/predict" method="post">
+            <label for="venue">Select Venue:</label>
+            <select id="venue" name="venue">
+                {% for venue in venues %}
+                <option value="{{ venue }}">{{venue}}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <label for="batting_team">Select Batting Team:</label>
+            <select id="batting_team" name="batting_team" required onchange="updateBowlingOptions()">
+                {% for team in batting_team %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+
+            <label for="bowling_team">Select Bowling Team:</label>
+            <select id="bowling_team" name="bowling_team">
+                {% for team in bowling_team %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+            <label for="striker">Select striker:</label>
+            <select id="striker" name="batsman">
+                {% for player in striker %}
+                <option value="{{ player }}">{{ player }}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+
+            <label for="bowler">Select Bowler:</label>
+            <select id="bowler" name="bowler">
+                {% for player in bowler %}
+                <option value="{{ player }}">{{ player }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <button type="submit">Predict</button>
+        </form>
+        {% if prediction_text %}
+        <h3>{{ prediction_text }}</h3>
+        {% endif %}
+    </div>
+</body>
+
+</html>
